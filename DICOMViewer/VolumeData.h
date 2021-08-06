@@ -36,7 +36,7 @@ public:
 	enum SliceType { AXIAL, CORONAL, SAGITTAL };
 
 	// 미리 정의된 Volume 렌더링 투명도 함수 및 컬러 함수
-	enum RenderingPreset { MIP, BONE, SKIN, BONE_ARTERIES };
+	enum RenderingPreset { MIP, BONE, SKIN, NONE };
 
 protected:
 	// VTK 3차원 이미지 (Volume) 데이터

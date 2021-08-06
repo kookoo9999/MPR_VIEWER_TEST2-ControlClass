@@ -114,6 +114,15 @@ void CDlgVtkView::OnHScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar )
 
 		// 슬라이스 이미지 스크롤
 		DVManager::Mgr()->ScrollSliceIndex( m_ViewType, scrollPos );
+
+		//auto pcon = DVManager::Mgr()->m_pControlManager;
+		//switch (m_ViewType)
+		//{
+		//default:
+		//	break;
+		//}
+		//pcon->SetAxialMax(scrollPos);
+		
 		//DVManager::Mgr()->UpdatePlnae();
 	}
 

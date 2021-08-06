@@ -329,8 +329,17 @@ void CMainFrame::OnView3dOnOff()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 	//DVManager::Mgr()->bCheck = !DVManager::Mgr()->bCheck;
 
+	//Show Plane via Control Class 
+	
 	DVManager::Mgr()->m_bShowPlane = !DVManager::Mgr()->m_bShowPlane;
+	DVManager::Mgr()->m_pControlManager->GetSCAViewOnOff();
 	DVManager::Mgr()->ShowPlnaeTest();
+	
+
+	//DVManager::Mgr()->m_bShowPlane = !DVManager::Mgr()->m_bShowPlane;
+	//DVManager::Mgr()->ShowPlnateTest2();
+
+	//DVManager::Mgr()->ShowPlnae();
 
 	//DVManager::Mgr()->m_bShowPlane = !DVManager::Mgr()->m_bShowPlane;
 	
@@ -346,8 +355,12 @@ void CMainFrame::OnUpdateView3dOnOff(CCmdUI *pCmdUI)
 void CMainFrame::OnViewOutline()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	DVManager::Mgr()->ShowLineTest();
+	
+	//DVManager::Mgr()->m_pControlManager->SetLineOnOff(DVManager::Mgr()->bCheck);
+
 	DVManager::Mgr()->m_testCheck = !DVManager::Mgr()->m_testCheck;
+	DVManager::Mgr()->ShowLineTest();
+
 	//DVManager::Mgr()->ShowOutline();
 	//DVManager::Mgr()->bCheck = !DVManager::Mgr()->bCheck;
 }
@@ -359,6 +372,7 @@ void CMainFrame::OnUpdateViewOutline(CCmdUI *pCmdUI)
 	//pCmdUI->SetCheck(DVManager::Mgr()->bCheck);
 	
 	pCmdUI->SetCheck(DVManager::Mgr()->m_testCheck);
+	//pCmdUI->SetCheck(DVManager::Mgr()->m_pControlManager->GetLineOnOff());
 }
 
 
@@ -372,6 +386,7 @@ void CMainFrame::OnCheckBone()
 	pSlider->Redraw();
 	
 	DVManager::Mgr()->m_bShowBone = !DVManager::Mgr()->m_bShowBone;
+	DVManager::Mgr()->m_pControlManager->SetBoneOnOff(!DVManager::Mgr()->m_pControlManager->GetBoneOnOff());
 	//DVManager::Mgr()->ShowBone();
 	DVManager::Mgr()->ShowBoneTest();
 	
@@ -542,25 +557,19 @@ void CMainFrame::OnSliderrx()
 	CMFCRibbonSlider* pSlider = DYNAMIC_DOWNCAST(CMFCRibbonSlider,
 		m_wndRibbonBar.FindByID(ID_SLIDERRX));
 
-	pSlider->SetPos(DVManager::Mgr()->fTemp + 180);
+	
 	
 	// 리본 슬라이더 위치 값 획득
 	int pos = pSlider->GetPos();
+	//pSlider->SetPos(DVManager::Mgr()->m_pControlManager->GetRotationRX());
 
-	if (pos > 180)
-	{
-		DVManager::Mgr()->fTemp = DVManager::Mgr()->m_pControlManager->GetRotationRX() - pos;
-		DVManager::Mgr()->m_pControlManager->SetRotationRX(DVManager::Mgr()->fTemp);
-		DVManager::Mgr()->m_pControlManager->RotateUpdate();
-		DVManager::Mgr()->m_pControlManager->Update();
-	}
-	else
-	{
-		DVManager::Mgr()->fTemp = DVManager::Mgr()->m_pControlManager->GetRotationRX() + pos;
-		DVManager::Mgr()->m_pControlManager->SetRotationRX(DVManager::Mgr()->fTemp);
-		DVManager::Mgr()->m_pControlManager->RotateUpdate();
-		DVManager::Mgr()->m_pControlManager->Update();
-	}
+	
+		//DVManager::Mgr()->fTemp = DVManager::Mgr()->m_pControlManager->GetRotationRX() + pos;
+	DVManager::Mgr()->m_pControlManager->SetRotationRX(pos);
+	DVManager::Mgr()->m_pControlManager->RotateUpdate();
+	DVManager::Mgr()->m_pControlManager->Update();
+	DVManager::Mgr()->GetVtkWindow(3)->Render();
+	
 }
 
 
@@ -570,25 +579,16 @@ void CMainFrame::OnSliderry()
 	CMFCRibbonSlider* pSlider = DYNAMIC_DOWNCAST(CMFCRibbonSlider,
 		m_wndRibbonBar.FindByID(ID_SLIDERRY));
 
-	pSlider->SetPos(DVManager::Mgr()->fTemp + 180);
-
 	// 리본 슬라이더 위치 값 획득
 	int pos = pSlider->GetPos();
+	//pSlider->SetPos(DVManager::Mgr()->m_pControlManager->GetRotationRX());
 
-	if (pos > 180)
-	{
-		DVManager::Mgr()->fTemp = DVManager::Mgr()->m_pControlManager->GetRotationRX() - pos;
-		DVManager::Mgr()->m_pControlManager->SetRotationRX(DVManager::Mgr()->fTemp);
-		DVManager::Mgr()->m_pControlManager->RotateUpdate();
-		DVManager::Mgr()->m_pControlManager->Update();
-	}
-	else
-	{
-		DVManager::Mgr()->fTemp = DVManager::Mgr()->m_pControlManager->GetRotationRX() + pos;
-		DVManager::Mgr()->m_pControlManager->SetRotationRX(DVManager::Mgr()->fTemp);
-		DVManager::Mgr()->m_pControlManager->RotateUpdate();
-		DVManager::Mgr()->m_pControlManager->Update();
-	}
+
+		//DVManager::Mgr()->fTemp = DVManager::Mgr()->m_pControlManager->GetRotationRX() + pos;
+	DVManager::Mgr()->m_pControlManager->SetRotationRY(pos);
+	DVManager::Mgr()->m_pControlManager->RotateUpdate();
+	DVManager::Mgr()->m_pControlManager->Update();
+	DVManager::Mgr()->GetVtkWindow(3)->Render();
 }
 
 
@@ -600,4 +600,12 @@ void CMainFrame::OnSliderrz()
 
 	// 리본 슬라이더 위치 값 획득
 	int pos = pSlider->GetPos();
+	//pSlider->SetPos(DVManager::Mgr()->m_pControlManager->GetRotationRX());
+
+
+		//DVManager::Mgr()->fTemp = DVManager::Mgr()->m_pControlManager->GetRotationRX() + pos;
+	DVManager::Mgr()->m_pControlManager->SetRotationRZ(pos);
+	DVManager::Mgr()->m_pControlManager->RotateUpdate();
+	DVManager::Mgr()->m_pControlManager->Update();
+	DVManager::Mgr()->GetVtkWindow(3)->Render();
 }

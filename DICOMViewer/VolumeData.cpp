@@ -39,6 +39,9 @@ void VolumeData::ReadyForVolumeRendering()
 	m_ImageData->GetOrigin( origin );
 	vtkSmartPointer<vtkTransform> userTransform = vtkSmartPointer<vtkTransform>::New();
 	userTransform->Translate( origin );
+	//userTransform->RotateX();
+	//userTransform->RotateY();
+	//userTransform->RotateZ();
 	userTransform->Concatenate( GetOrientation() );
 	userTransform->Translate( -origin[0], -origin[1], -origin[2] );
 	userTransform->Update();
@@ -50,7 +53,7 @@ void VolumeData::ReadyForVolumeRendering()
 	m_VolumeRendering->SetUserTransform( userTransform );
 
 	// 최대 밝기값 기준 렌더링 모드 준비
-	SetCurrentPresetMode( MIP );
+	SetCurrentPresetMode( NONE );
 }
 
 void VolumeData::SetCurrentPresetMode( int val )
@@ -78,6 +81,10 @@ void VolumeData::SetCurrentPresetMode( int val )
 	
 	// 투명도 함수 및 컬러 함수 설정
 	switch( m_CurrentPresetMode ) {
+	case NONE:
+
+		break;
+
 	case MIP:
 		// 최대 밝기값 기준 연속적인 투명도 함수 설정
  		m_ColorFunc->AddRGBPoint( nMin, 1.0, 1.0, 1.0 );

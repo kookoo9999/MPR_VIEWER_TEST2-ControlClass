@@ -62,6 +62,14 @@ public:
 	void SetAxialPos(int value) { m_nAxialPos = value; }
 	int GetAxialPos() const { return m_nAxialPos; }
 
+	//Plane 의 위치 최대값
+	void SetSagittalMax(int value) { m_nSagittalMax = value; }
+	int GetSagittalMax() const { return m_nSagittalMax; }
+	void SetCoronalMax(int value) { m_nCoronalMax = value; }
+	int GetCoronalMax() const { return m_nCoronalMax; }
+	void SetAxialMax(int value) { m_nAxialMax = value; }
+	int GetAxialMax() const { return m_nAxialMax; }
+
 	// 데이터 회전 내용을 반영한다.
 	void RotateUpdate();
 

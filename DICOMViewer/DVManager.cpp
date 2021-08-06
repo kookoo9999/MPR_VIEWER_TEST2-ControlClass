@@ -59,7 +59,7 @@ void DVManager::InitVtkWindow( int viewType, void* hWnd )
 		// Renderer 생성
 		C_VTK(vtkRenderer, renderer);
 		
-		renderer->SetBackground( 0.0, 0.0, 0.0 );					// 검은색 배경
+		renderer->SetBackground( 0.1, 0.1, 0.1 );					// 검은색 배경
 
 		// 3D View 설정
 		if( viewType == VIEW_3D ) {
@@ -377,7 +377,7 @@ void DVManager::ShowBoneTest()
 	auto pCont = m_pControlManager;
 	if (nullptr == pCont) return;
 
-	pCont->SetBoneOnOff(!pCont->GetBoneOnOff());
+	//pCont->SetBoneOnOff(!pCont->GetBoneOnOff());
 	pCont->Update();
 	GetVtkWindow(VIEW_3D)->Render();
 }
@@ -426,6 +426,125 @@ void DVManager::ShowPlnaeTest()
 	pRenWin->Render();	
 }
 
+void DVManager::ShowPlnateTest2()
+{
+	for (auto& s : m_pActorSCAPlane)
+	{
+		GetRenderer(VIEW_3D)->RemoveActor(s);
+		s = nullptr;
+	}
+	m_pActorSCAPlane.clear();
+
+	if (m_bShowPlane)
+	{
+		// Volume 데이터 검사
+		vtkSP<VolumeData> volumeData = GetDicomLoader()->GetVolumeData();
+		if (volumeData == NULL) return;
+
+		auto spacing = volumeData->GetImageData()->GetSpacing();
+
+		auto intDim = volumeData->GetImageData()->GetDimensions();
+
+		m_nAxialMax = intDim[2];
+		m_nCoronalMax = intDim[1];
+		m_nSagittalMax = intDim[0];
+
+		// 영상의 1/2 위치로 Postion 을 초기화한다.
+		m_nSagittalPos = m_nSagittalMax / 2;
+		m_nCoronalPos = m_nCoronalMax / 2;
+		m_nAxialPos = m_nAxialMax / 2;
+
+		volumeData->GetSliceActor(VIEW_SAGITTAL);
+		{
+			// Start by creating a black/white lookup table.
+			C_VTK(vtkLookupTable, bwLut);
+			bwLut->SetTableRange(0, 2000);
+			bwLut->SetSaturationRange(0, 0);
+			bwLut->SetHueRange(0, 0);
+			bwLut->SetValueRange(0, 1);
+			bwLut->Build(); //effective built
+
+			C_VTK(vtkImageMapToColors, sagittalColors);
+			sagittalColors->SetInputData(volumeData->GetImageData());
+			sagittalColors->SetLookupTable(bwLut);
+			sagittalColors->Update();
+
+			volumeData->GetSliceActor(VIEW_SAGITTAL)->GetMapper()->SetInputConnection(sagittalColors->GetOutputPort());
+			volumeData->GetSliceActor(VIEW_SAGITTAL)->SetDisplayExtent(m_nSagittalPos, m_nSagittalPos, 0, m_nCoronalMax, 0, m_nAxialMax);
+			volumeData->GetSliceActor(VIEW_SAGITTAL)->SetDisplayExtent(m_nSagittalPos, m_nSagittalPos, 0, m_nCoronalMax, 0, m_nAxialMax);
+
+
+
+			m_pActorSCAPlane.push_back(volumeData->GetSliceActor(VIEW_SAGITTAL));
+		}
+		
+		
+
+		volumeData->GetSliceActor(VIEW_AXIAL);
+		{
+			// Now create a lookup table that consists of the full hue circle (from HSV).
+			C_VTK(vtkLookupTable, hueLut);
+			hueLut->SetTableRange(0, 2000);
+			hueLut->SetHueRange(0, 0);
+			hueLut->SetSaturationRange(0, 0);
+			hueLut->SetValueRange(0, 1);
+			hueLut->Build(); //effective built
+
+			C_VTK(vtkImageMapToColors, axialColors);
+			axialColors->SetInputData(volumeData->GetImageData());
+			axialColors->SetLookupTable(hueLut);
+			axialColors->Update();
+
+			volumeData->GetSliceActor(VIEW_AXIAL)->GetMapper()->SetInputConnection(axialColors->GetOutputPort());
+			volumeData->GetSliceActor(VIEW_AXIAL)->SetDisplayExtent(0, m_nSagittalMax, 0, m_nCoronalMax, m_nAxialPos, m_nAxialPos);
+			volumeData->GetSliceActor(VIEW_AXIAL)->ForceOpaqueOn();
+
+			m_pActorSCAPlane.push_back(volumeData->GetSliceActor(VIEW_AXIAL));
+		}
+		
+		
+		
+
+		volumeData->GetSliceActor(VIEW_CORONAL);
+		{
+			// Finally, create a lookup table with a single hue but having a range in the saturation of the hue.
+			C_VTK(vtkLookupTable, satLut);
+			satLut->SetTableRange(0, 2000);
+			satLut->SetHueRange(0, 0);
+			satLut->SetSaturationRange(0, 0);
+			satLut->SetValueRange(0, 1);
+			satLut->Build(); //effective built
+
+			C_VTK(vtkImageMapToColors, coronalColors);
+			coronalColors->SetInputData(volumeData->GetImageData());
+			coronalColors->SetLookupTable(satLut);
+			coronalColors->Update();
+
+			volumeData->GetSliceActor(VIEW_CORONAL)->GetMapper()->SetInputConnection(coronalColors->GetOutputPort());
+			volumeData->GetSliceActor(VIEW_CORONAL)->SetDisplayExtent(0, m_nSagittalMax, m_nCoronalPos, m_nCoronalPos, 0, m_nAxialMax);
+			volumeData->GetSliceActor(VIEW_CORONAL)->ForceOpaqueOn();
+
+
+
+			m_pActorSCAPlane.push_back(volumeData->GetSliceActor(VIEW_CORONAL));
+		}
+		for (auto& s : m_pActorSCAPlane)
+		{
+			GetRenderer(VIEW_3D)->AddActor(s);
+
+		}
+		
+	}	
+
+	auto pWin = GetVtkWindow(VIEW_3D);
+
+	pWin->Render();
+
+}
+
+	
+
+
 void DVManager::ShowPlnae()
 {	
 
@@ -444,12 +563,11 @@ void DVManager::ShowPlnae()
 
 		auto spacing = volumeData->GetImageData()->GetSpacing();
 
-		double renderer_bounds[6];
-		GetRenderer(VIEW_3D)->ComputeVisiblePropBounds(renderer_bounds);
+		auto intDim = volumeData->GetImageData()->GetDimensions();
 
-		m_nAxialMax = renderer_bounds[5] / spacing[2];
-		m_nCoronalMax = renderer_bounds[1] / spacing[0];
-		m_nSagittalMax = renderer_bounds[3] / spacing[1];
+		m_nAxialMax = intDim[2];
+		m_nCoronalMax = intDim[1];
+		m_nSagittalMax = intDim[0];
 
 		// 영상의 1/2 위치로 Postion 을 초기화한다.
 		m_nSagittalPos = m_nSagittalMax / 2;

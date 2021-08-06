@@ -31,7 +31,7 @@ CControlManager::CControlManager(vtkImageData* pImage, vtkRenderer* pRenderer)
 	, m_bShowSkin(false)
 	, m_fThresholdBone(452)
 	, m_bShowBone(false)
-	, m_bShowOutline(true)
+	, m_bShowOutline(false)
 	, m_fRx(0.0)
 	, m_fRy(0.0)
 	, m_fRz(0.0)
@@ -243,7 +243,7 @@ void CControlManager::Update()
 			// Start by creating a black/white lookup table.
 			C_VTK(vtkLookupTable, bwLut);
 			bwLut->SetTableRange(0, 2000);
-			bwLut->SetSaturationRange(0, 0);
+			bwLut->SetSaturationRange(0, 0.3);
 			bwLut->SetHueRange(0, 0);
 			bwLut->SetValueRange(0, 1);
 			bwLut->Build(); //effective built
@@ -265,9 +265,9 @@ void CControlManager::Update()
 			// Now create a lookup table that consists of the full hue circle (from HSV).
 			C_VTK(vtkLookupTable, hueLut);
 			hueLut->SetTableRange(0, 2000);
-			hueLut->SetHueRange(0, 1);
-			hueLut->SetSaturationRange(1, 1);
-			hueLut->SetValueRange(1, 1);
+			hueLut->SetHueRange(0, 0);
+			hueLut->SetSaturationRange(0, 0.3);
+			hueLut->SetValueRange(0, 1);
 			hueLut->Build(); //effective built
 
 			C_VTK(vtkImageMapToColors, axialColors);
@@ -287,9 +287,9 @@ void CControlManager::Update()
 			// Finally, create a lookup table with a single hue but having a range in the saturation of the hue.
 			C_VTK(vtkLookupTable, satLut);
 			satLut->SetTableRange(0, 2000);
-			satLut->SetHueRange(.6, .6);
-			satLut->SetSaturationRange(0, 1);
-			satLut->SetValueRange(1, 1);
+			satLut->SetHueRange(0, 0);
+			satLut->SetSaturationRange(0, 0.3);
+			satLut->SetValueRange(0, 1);
 			satLut->Build(); //effective built
 
 			C_VTK(vtkImageMapToColors, coronalColors);

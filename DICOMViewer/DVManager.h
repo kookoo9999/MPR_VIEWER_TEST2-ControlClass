@@ -183,6 +183,8 @@ public:
 	//show outline
 	void ShowOutline();
 
+	//via ControlManager class
+
 	void ShowLineTest();
 
 	void ShowBoneTest();
@@ -190,6 +192,8 @@ public:
 	void ShowSkinTest();
 
 	void ShowPlnaeTest();
+
+	void ShowPlnateTest2();
 	// 영상 데이터 저장 변수
 	vtkSP<vtkImageData> m_pDICOMImage;
 
