@@ -184,6 +184,7 @@ void DVManager::ClearVolumeDisplay()
 	// 3D 뷰에 볼륨 렌더링 제거
 	GetRenderer( VIEW_3D )->RemoveViewProp( volumeData->GetVolumeRendering() );
 	GetRenderer(VIEW_3D)->RemoveAllObservers();
+	GetRenderer(VIEW_3D)->RemoveAllViewProps();
 	// 슬라이스 뷰에 각 슬라이스 Actor 제거
 	for( int viewType = VIEW_AXIAL; viewType <= VIEW_SAGITTAL; viewType++ ) {
 		GetRenderer( viewType )->RemoveActor( volumeData->GetSliceActor( viewType ) );
@@ -221,7 +222,12 @@ void DVManager::ScrollSliceIndex( int viewType, int pos )
 	// Volume 이미지의 인덱스 설정
 	volumeData->SetSliceIndex( viewType, pos );
 
-	
+	if(viewType==VIEW_AXIAL)	m_pControlManager->SetAxialPos(pos);
+	if (viewType == VIEW_CORONAL) m_pControlManager->SetCoronalPos(pos);
+	if (viewType == VIEW_SAGITTAL)m_pControlManager->SetSagittalPos(pos);
+
+	m_pControlManager->Update();
+	GetVtkWindow(VIEW_3D)->Render();
 	// 정보 표시 업데이트
 	UpdateAnnotation();
 
@@ -321,6 +327,8 @@ void DVManager::RotateVolume()
 	// 로드된 Volume 데이터 검사
 	vtkSP<VolumeData> volumeData = GetDicomLoader()->GetVolumeData();
 	if (volumeData == NULL) return;
+
+	
 
 	
 
