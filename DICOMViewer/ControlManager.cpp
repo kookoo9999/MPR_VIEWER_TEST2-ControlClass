@@ -309,7 +309,7 @@ void CControlManager::Update()
 			m_pRenderer->AddActor(s);
 		}
 	}
-
+	
 	
 
 }

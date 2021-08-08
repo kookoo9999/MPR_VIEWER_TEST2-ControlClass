@@ -53,7 +53,7 @@ void VolumeData::ReadyForVolumeRendering()
 	m_VolumeRendering->SetUserTransform( userTransform );
 
 	// 최대 밝기값 기준 렌더링 모드 준비
-	SetCurrentPresetMode( NONE );
+	SetCurrentPresetMode( MIP );
 }
 
 void VolumeData::SetCurrentPresetMode( int val )
