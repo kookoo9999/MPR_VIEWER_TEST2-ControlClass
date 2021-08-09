@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <GDCM_DIR>E:\DicomViewer\LIbrary\gdcm\gdcm-2.8.0\$(Configuration)</GDCM_DIR>
+    <GDCM_DIR>D:\LIbrary\gdcm\gdcm-2.8.0\$(Configuration)</GDCM_DIR>
   </PropertyGroup>
   <PropertyGroup>
     <IncludePath>$(GDCM_DIR)\include\gdcm-2.8;$(IncludePath)</IncludePath>

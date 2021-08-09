@@ -95,21 +95,23 @@ void CChildView::OnSize( UINT nType, int cx, int cy )
 	GetClientRect( rect );
 
 	// 메인 View에 포함된 Dialog 배치 (4분할)
+	
 	LONG xPos[3];
 	xPos[0] = rect.left;
 	xPos[1] = rect.left + rect.Width() / 2;
 	xPos[2] = rect.right;
 
-	LONG yPos[3];
+	LONG yPos[4];
 	yPos[0] = rect.top;
-	yPos[1] = rect.top + rect.Height() / 2;
-	yPos[2] = rect.bottom;
+	yPos[1] = rect.top + rect.Height() / 3;
+	yPos[2] = rect.top + 2 * (rect.Height() / 3);
+	yPos[3] = rect.bottom;
 
 	CRect subRect[4];
 	subRect[0] = CRect( xPos[0], yPos[0], xPos[1], yPos[1] ); // Axial 위치
-	subRect[1] = CRect( xPos[1], yPos[0], xPos[2], yPos[1] ); // Coronal 위치
-	subRect[2] = CRect( xPos[0], yPos[1], xPos[1], yPos[2] ); // Sagittal 위치
-	subRect[3] = CRect( xPos[1], yPos[1], xPos[2], yPos[2] ); // 3D View 위치
+	subRect[1] = CRect( xPos[0], yPos[1], xPos[1], yPos[2] ); // Coronal 위치
+	subRect[2] = CRect( xPos[0], yPos[2], xPos[1], yPos[3] ); // Sagittal 위치
+	subRect[3] = CRect( xPos[1], yPos[0], xPos[2], yPos[3] ); // 3D View 위치
 
 	// Vtk Window 배치
 	for( int viewType = 0; viewType < 4; viewType++ ) {
