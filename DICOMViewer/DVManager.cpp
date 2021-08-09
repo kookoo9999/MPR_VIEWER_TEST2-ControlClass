@@ -222,12 +222,15 @@ void DVManager::ScrollSliceIndex( int viewType, int pos )
 	// Volume 이미지의 인덱스 설정
 	volumeData->SetSliceIndex( viewType, pos );
 
+	//Control Class의 Plane Position Update
 	if(viewType==VIEW_AXIAL)	m_pControlManager->SetAxialPos(pos);
 	if (viewType == VIEW_CORONAL) m_pControlManager->SetCoronalPos(pos);
 	if (viewType == VIEW_SAGITTAL)m_pControlManager->SetSagittalPos(pos);
 
+	//변경내용 Update 및 Render Update
 	m_pControlManager->Update();
 	GetVtkWindow(VIEW_3D)->Render();
+
 	// 정보 표시 업데이트
 	UpdateAnnotation();
 

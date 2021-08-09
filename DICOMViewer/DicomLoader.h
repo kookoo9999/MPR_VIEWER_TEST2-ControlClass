@@ -25,10 +25,10 @@ protected:
 	std::vector<vtkSmartPointer<DicomGroup>> m_GroupList;
 
 	/// 현재 선택된 DICOM Group
-	vtkSmartPointer<DicomGroup> m_CurrentGroup;
+	vtkSP<DicomGroup> m_CurrentGroup;
 
 	/// 현재 선택된 Volume 데이터
-	vtkSmartPointer<VolumeData> m_VolumeData;
+	vtkSP<VolumeData> m_VolumeData;
 
 public:
 	/// DICOM 디렉토리 열기
@@ -41,14 +41,14 @@ public:
 	int GetNumberOfGroups() { return (int)m_GroupList.size(); }
 
 	/// DICOM 그룹
-	vtkSmartPointer<DicomGroup> GetDicomGroup( int idx );
+	vtkSP<DicomGroup> GetDicomGroup( int idx );
 
 	/// 현재 선택된 DICOM Group
-	vtkSmartPointer<DicomGroup> GetCurrentGroup() const { return m_CurrentGroup; }
+	vtkSP<DicomGroup> GetCurrentGroup() const { return m_CurrentGroup; }
 
 	/// Volume 데이터
-	vtkSmartPointer<VolumeData> GetVolumeData() const { return m_VolumeData; }
+	vtkSP<VolumeData> GetVolumeData() const { return m_VolumeData; }
 
 	/// DICOM 그룹에서 Volume 데이터 로드
-	void LoadVolumeData( vtkSmartPointer<DicomGroup> dicomGroup );
+	void LoadVolumeData( vtkSP<DicomGroup> dicomGroup );
 };

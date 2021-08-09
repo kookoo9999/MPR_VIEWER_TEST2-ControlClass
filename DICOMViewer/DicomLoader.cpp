@@ -27,7 +27,7 @@ DicomLoader::~DicomLoader()
 void DicomLoader::OpenDicomDirectory( const char* dirPath )
 {
 	// DICOM 폴더 내의 모든 파일을 추가
-	vtkSmartPointer<vtkDirectory> vtkDir = vtkSmartPointer<vtkDirectory>::New();
+	C_VTK(vtkDirectory, vtkDir);
 	vtkDir->Open( dirPath );
 	for( int i = 0; i < vtkDir->GetNumberOfFiles(); i++ ) {
 		const char *filename = vtkDir->GetFile( i );
@@ -70,7 +70,7 @@ void DicomLoader::AddDicomFile( const char *filePath )
 	if( ds.FindDataElement( tagSeriesNum ) ) seriesNum = sf.ToString( tagSeriesNum );
 
 	// DICOM 파일이 포함될 그룹 찾기
-	vtkSmartPointer<DicomGroup> group;
+	vtkSP<DicomGroup> group;
 	for( int i = 0; i < m_GroupList.size(); i++ ) {
 		if( m_GroupList[i]->IsSameGroup( patientID, studyID, seriesNum ) ) {
 			group = m_GroupList[i];
@@ -80,7 +80,7 @@ void DicomLoader::AddDicomFile( const char *filePath )
 
 	// 못 찾으면 생성
 	if( group == NULL ) {
-		group = vtkSmartPointer<DicomGroup>::New();
+		group = vtkSP<DicomGroup>::New();
 		group->SetPatientID( patientID );
 		group->SetStudyID( studyID );
 		group->SetSeriesNum( seriesNum );
@@ -101,7 +101,7 @@ vtkSmartPointer<DicomGroup> DicomLoader::GetDicomGroup( int idx )
 	return m_GroupList[idx];
 }
 
-void DicomLoader::LoadVolumeData( vtkSmartPointer<DicomGroup> dicomGroup )
+void DicomLoader::LoadVolumeData( vtkSP<DicomGroup> dicomGroup )
 {
 	// DICOM 그룹 검사
 	if( dicomGroup == NULL ) return;
@@ -123,13 +123,14 @@ void DicomLoader::LoadVolumeData( vtkSmartPointer<DicomGroup> dicomGroup )
 	else sortedFileNames = dicomGroup->GetFileList();
 
 	// vtkStringArray 타입으로 변환
-	vtkSmartPointer<vtkStringArray> fileArray = vtkSmartPointer<vtkStringArray>::New();
+	C_VTK(vtkStringArray, fileArray);	
 	for( int i = 0; i < (int)sortedFileNames.size(); i++ ) 
 		fileArray->InsertNextValue( sortedFileNames[i].c_str() );
 
 	// GDCM Image Reader를 이용하여 DICOM 이미지 로딩
-	vtkSmartPointer<vtkGDCMImageReader> dcmReader = 
-		vtkSmartPointer<vtkGDCMImageReader>::New();	
+
+	C_VTK(vtkGDCMImageReader, dcmReader);
+		
 	// 이미지를 아래에서 위로 읽음
 	dcmReader->FileLowerLeftOn();
 	// 파일 목록이 1개 이상
@@ -140,7 +141,7 @@ void DicomLoader::LoadVolumeData( vtkSmartPointer<DicomGroup> dicomGroup )
 	dcmReader->Update();
 
 	// Volume Data 새로 생성
-	m_VolumeData = vtkSmartPointer<VolumeData>::New();
+	m_VolumeData = vtkSP<VolumeData>::New();
 	m_VolumeData->SetImageData( dcmReader->GetOutput() );
 	
 	m_VolumeData->SetOrientation( dcmReader->GetDirectionCosines() );

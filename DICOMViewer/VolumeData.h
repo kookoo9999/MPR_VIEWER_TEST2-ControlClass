@@ -40,19 +40,19 @@ public:
 
 protected:
 	// VTK 3차원 이미지 (Volume) 데이터
-	vtkSmartPointer<vtkImageData> m_ImageData;
+	vtkSP<vtkImageData> m_ImageData;
 
 	// Volume 데이터의 회전이동 정보
-	vtkSmartPointer<vtkMatrix4x4> m_Orientation;
+	vtkSP<vtkMatrix4x4> m_Orientation;
 
 	// Volume 렌더링 객체
-	vtkSmartPointer<vtkVolume> m_VolumeRendering;
+	vtkSP<vtkVolume> m_VolumeRendering;
 	
 	// Volume 렌더링 투명도 함수
-	vtkSmartPointer<vtkPiecewiseFunction> m_OpacityFunc;
+	vtkSP<vtkPiecewiseFunction> m_OpacityFunc;
 
 	// Volume 렌더링 컬러 함수
-	vtkSmartPointer<vtkColorTransferFunction> m_ColorFunc;
+	vtkSP<vtkColorTransferFunction> m_ColorFunc;
 
 	//skin Extractor
 	vtkSP<vtkActor> m_pActorSKin;
@@ -65,30 +65,30 @@ public:
 	
 	
 	// Slice 렌더링 객체 (Axial, Coronal, Sagittal 슬라이스)
-	vtkSmartPointer<vtkImageActor> m_SliceActor[3];
+	vtkSP<vtkImageActor> m_SliceActor[3];
 
 	// Slice 렌더링을 위한 Volume 단면 
-	vtkSmartPointer<vtkImageReslice> m_VolumeSlice[3];
+	vtkSP<vtkImageReslice> m_VolumeSlice[3];
 
 	// Slice 렌더링 속성
-	vtkSmartPointer<vtkImageProperty> m_SliceProperty;
+	vtkSP<vtkImageProperty> m_SliceProperty;
 
 	// Slice 인덱스
 	int m_SliceIndex[3];
 
 public:	
 	// VTK Volume 데이터 가져오기/설정하기
-	vtkSmartPointer<vtkImageData> GetImageData() const { return m_ImageData; }
-	void SetImageData( vtkSmartPointer<vtkImageData> val ) { m_ImageData = val; }
+	vtkSP<vtkImageData> GetImageData() const { return m_ImageData; }
+	void SetImageData( vtkSP<vtkImageData> val ) { m_ImageData = val; }
 	
 	// Volume 데이터의 회전이동 정보 가져오기/설정하기
-	vtkSmartPointer<vtkMatrix4x4> GetOrientation() const { return m_Orientation; }
-	void SetOrientation( vtkSmartPointer<vtkMatrix4x4> val ) { m_Orientation = val; }
+	vtkSP<vtkMatrix4x4> GetOrientation() const { return m_Orientation; }
+	void SetOrientation( vtkSP<vtkMatrix4x4> val ) { m_Orientation = val; }
 
 	
 
 	// Volume 렌더링 객체
-	vtkSmartPointer<vtkVolume> GetVolumeRendering() const { return m_VolumeRendering; }
+	vtkSP<vtkVolume> GetVolumeRendering() const { return m_VolumeRendering; }
 
 	// 3D Volume 렌더링 준비
 	void ReadyForVolumeRendering();
@@ -102,7 +102,7 @@ public:
 	
 	
 	// Slice 렌더링 객체
-	vtkSmartPointer<vtkImageActor> GetSliceActor( int sliceType );
+	vtkSP<vtkImageActor> GetSliceActor( int sliceType );
 
 	// Slice 렌더링 준비
 	void ReadyForSliceRendering();
@@ -110,7 +110,7 @@ public:
 	
 
 	// Slice 타입과 인덱스에 따른 Reslice 행렬 계산
-	vtkSmartPointer<vtkMatrix4x4> GetResliceMatrix( int sliceType, int sliceIdx );
+	vtkSP<vtkMatrix4x4> GetResliceMatrix( int sliceType, int sliceIdx );
 	
 	// 현재 Slice 인덱스
 	int GetSliceIndex( int sliceType );

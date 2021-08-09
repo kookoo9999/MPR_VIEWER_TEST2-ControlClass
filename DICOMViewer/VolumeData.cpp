@@ -16,19 +16,19 @@ VolumeData::~VolumeData()
 void VolumeData::ReadyForVolumeRendering()
 {
 	// Volume Mapper 준비
-	vtkSmartPointer<vtkSmartVolumeMapper> smartMapper = vtkSmartPointer<vtkSmartVolumeMapper>::New();
-	
+	C_VTK(vtkSmartVolumeMapper, smartMapper);
+		
 	smartMapper->SetInputData( m_ImageData );
 
 	// 투명도 함수, 컬러 함수 준비
 	double scalarRange[2];
 	m_ImageData->GetScalarRange( scalarRange );
-	m_OpacityFunc = vtkSmartPointer<vtkPiecewiseFunction>::New();
+	m_OpacityFunc = vtkSP<vtkPiecewiseFunction>::New();
 	m_OpacityFunc->AdjustRange( scalarRange );
-	m_ColorFunc = vtkSmartPointer<vtkColorTransferFunction>::New();
+	m_ColorFunc = vtkSP<vtkColorTransferFunction>::New();
 	
 	// Volume 속성 준비
-	vtkSmartPointer<vtkVolumeProperty> volumeProperty = vtkSmartPointer<vtkVolumeProperty>::New();
+	C_VTK(vtkVolumeProperty, volumeProperty);
 	volumeProperty->SetScalarOpacity( m_OpacityFunc );
 	volumeProperty->SetColor( m_ColorFunc );
 	volumeProperty->ShadeOn();
@@ -37,7 +37,7 @@ void VolumeData::ReadyForVolumeRendering()
 	// Volume 회전 변환 
 	double origin[3];
 	m_ImageData->GetOrigin( origin );
-	vtkSmartPointer<vtkTransform> userTransform = vtkSmartPointer<vtkTransform>::New();
+	C_VTK(vtkTransform, userTransform);
 	userTransform->Translate( origin );
 	//userTransform->RotateX();
 	//userTransform->RotateY();
@@ -47,7 +47,7 @@ void VolumeData::ReadyForVolumeRendering()
 	userTransform->Update();
 
 	// Volume 렌더링 객체 생성
-	m_VolumeRendering = vtkSmartPointer<vtkVolume>::New();
+	m_VolumeRendering = vtkSP<vtkVolume>::New();
 	m_VolumeRendering->SetMapper( smartMapper );
 	m_VolumeRendering->SetProperty( volumeProperty );
 	m_VolumeRendering->SetUserTransform( userTransform );
@@ -65,7 +65,7 @@ void VolumeData::SetCurrentPresetMode( int val )
 	m_CurrentPresetMode = val;
 
 	// Volume Mapper 가져오기
-	vtkSmartPointer<vtkSmartVolumeMapper> volumeMapper = 
+	vtkSP<vtkSmartVolumeMapper> volumeMapper = 
 		vtkSmartVolumeMapper::SafeDownCast( m_VolumeRendering->GetMapper() );
 	if( volumeMapper == NULL ) return;
 
@@ -139,7 +139,7 @@ void VolumeData::SetCurrentPresetMode( int val )
 
 
 
-vtkSmartPointer<vtkImageActor> VolumeData::GetSliceActor( int sliceType )
+vtkSP<vtkImageActor> VolumeData::GetSliceActor( int sliceType )
 {
 	// 슬라이스 타입 검사
 	if( sliceType < 0 || sliceType >= 3 ) return NULL;
@@ -159,7 +159,7 @@ void VolumeData::ReadyForSliceRendering()
 	m_ImageData->GetExtent( ext );
 
 	// DICOM 데이터에 따라 초기 Window / Level 값을 조정
-	m_SliceProperty = vtkSmartPointer<vtkImageProperty>::New();
+	m_SliceProperty = vtkSP<vtkImageProperty>::New();
 	m_SliceProperty->SetColorLevel( (range[1] + range[0]) / 2 );
 	m_SliceProperty->SetColorWindow( range[1] - range[0] );
 
@@ -179,7 +179,7 @@ void VolumeData::ReadyForSliceRendering()
 		}
 
 		// Image Reslice 생성
-		m_VolumeSlice[sliceType] = vtkSmartPointer<vtkImageReslice>::New();
+		m_VolumeSlice[sliceType] = vtkSP<vtkImageReslice>::New();
 		m_VolumeSlice[sliceType]->SetInputData( m_ImageData );
 		m_VolumeSlice[sliceType]->SetOutputDimensionality( 2 );		// 2D로 슬라이스
 		m_VolumeSlice[sliceType]->SetResliceAxes( 
@@ -189,7 +189,7 @@ void VolumeData::ReadyForSliceRendering()
 		
 
 		// 이미지 Actor 생성
-		m_SliceActor[sliceType] = vtkSmartPointer<vtkImageActor>::New();
+		m_SliceActor[sliceType] = vtkSP<vtkImageActor>::New();
 		m_SliceActor[sliceType]->GetMapper()
 			->SetInputData(m_VolumeSlice[sliceType]->GetOutput());
 
@@ -228,7 +228,7 @@ vtkSmartPointer<vtkMatrix4x4> VolumeData::GetResliceMatrix( int sliceType, int s
 	};
 
 	// Slice 행렬 생성
-	vtkSmartPointer<vtkMatrix4x4> mat = vtkSmartPointer<vtkMatrix4x4>::New();
+	C_VTK(vtkMatrix4x4, mat);
 	mat->DeepCopy( sliceMat[sliceType] );
 
 	// DICOM Volume 데이터 가져오기

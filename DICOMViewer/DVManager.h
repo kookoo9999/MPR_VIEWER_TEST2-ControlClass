@@ -49,13 +49,13 @@ public:
 
 protected:
 	/// Vtk Render Windows
-	vtkSmartPointer<vtkRenderWindow> m_vtkWindow[NUM_VIEW];
+	vtkSP<vtkRenderWindow> m_vtkWindow[NUM_VIEW];
 
 	/// DICOM Loader
-	vtkSmartPointer<DicomLoader> m_DicomLoader;
+	vtkSP<DicomLoader> m_DicomLoader;
 
 	/// 정보 표시
-	vtkSmartPointer<vtkCornerAnnotation> m_Annotation[NUM_VIEW];
+	vtkSP<vtkCornerAnnotation> m_Annotation[NUM_VIEW];
 
 	static DVManager* m_Instance;
 	
@@ -63,10 +63,10 @@ protected:
 public:
 	
 	//Orient Marker Widget
-	vtkSmartPointer<vtkOrientationMarkerWidget> m_orientMarker;
+	vtkSP<vtkOrientationMarkerWidget> m_orientMarker;
 
 	// Vtk Render Windows
-	vtkSmartPointer<vtkRenderWindow> GetVtkWindow( int viewType );
+	vtkSP<vtkRenderWindow> GetVtkWindow( int viewType );
 
 	// Vtk Window 초기화 (OnInitDialog)
 	void InitVtkWindow( int viewType, void* hWnd );
@@ -75,13 +75,13 @@ public:
 	void ResizeVtkWindow( int viewType, int width, int height );
 
 	// DICOM Loader 객체
-	vtkSmartPointer<DicomLoader> GetDicomLoader();
+	vtkSP<DicomLoader> GetDicomLoader();
 
 	// View 타입에 따른 VTK 렌더러
 	vtkSmartPointer<vtkRenderer> GetRenderer( int viewType );
 
 	// DICOM Group 선택 시, 화면 업데이트 및 초기화
-	void OnSelectDicomGroup( vtkSmartPointer<DicomGroup> group );
+	void OnSelectDicomGroup( vtkSP<DicomGroup> group );
 
 	// Volume 그리기 초기화
 	void ClearVolumeDisplay();
@@ -147,7 +147,7 @@ public:
 	// Skin Visibility 설정 값
 	bool m_bShowSkin = FALSE;
 
-	bool m_testCheck = FALSE;
+	bool m_testCheck = TRUE;
 	bool m_tBoneCheck = FALSE;
 	bool m_tSkinCheck = FALSE;
 
