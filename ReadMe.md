@@ -1,4 +1,4 @@
-포함된 기능 
+Included function 
 - Reading Dicom
 - Read Dicom tag information
 - DICOM Group Classification
