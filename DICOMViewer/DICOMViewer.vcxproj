@@ -182,9 +182,6 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="ChildView.h" />
     <ClInclude Include="ControlManager.h" />
     <ClInclude Include="DicomGroup.h" />
