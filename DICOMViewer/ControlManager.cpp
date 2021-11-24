@@ -47,8 +47,9 @@ CControlManager::CControlManager(vtkImageData* pImage, vtkRenderer* pRenderer)
 	{
 		auto spacing = m_pImage->GetSpacing();
 
-		// 이 부분이 문제입니다. 현재 보여지는 물체의 모든 bounds 를 얻기 때문에
-		// 가시화 하려는 데이터와 범위가 맞지 않는 bounds 를 얻습니다.
+		// 3D View에서 2D plnae을 표시할때 겪은 문제
+		// 이 부분이 문제,, 현재 보여지는 물체의 모든 bounds 를 얻기 때문에
+		// 가시화 하려는 데이터와 범위가 맞지 않는 bounds 를 얻는다
 		//double renderer_bounds[6];
 		//m_pRenderer->ComputeVisiblePropBounds(renderer_bounds);
 
@@ -243,7 +244,7 @@ void CControlManager::Update()
 			// Start by creating a black/white lookup table.
 			C_VTK(vtkLookupTable, bwLut);
 			bwLut->SetTableRange(0, 2000);
-			bwLut->SetSaturationRange(0, 0.3);
+			bwLut->SetSaturationRange(0, 0);
 			bwLut->SetHueRange(0, 0);
 			bwLut->SetValueRange(0, 1);
 			bwLut->Build(); //effective built
@@ -266,7 +267,7 @@ void CControlManager::Update()
 			C_VTK(vtkLookupTable, hueLut);
 			hueLut->SetTableRange(0, 2000);
 			hueLut->SetHueRange(0, 0);
-			hueLut->SetSaturationRange(0, 0.3);
+			hueLut->SetSaturationRange(0, 0);
 			hueLut->SetValueRange(0, 1);
 			hueLut->Build(); //effective built
 
@@ -288,7 +289,7 @@ void CControlManager::Update()
 			C_VTK(vtkLookupTable, satLut);
 			satLut->SetTableRange(0, 2000);
 			satLut->SetHueRange(0, 0);
-			satLut->SetSaturationRange(0, 0.3);
+			satLut->SetSaturationRange(0, 0);
 			satLut->SetValueRange(0, 1);
 			satLut->Build(); //effective built
 

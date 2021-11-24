@@ -45,7 +45,7 @@ public:
 public:
 	/// View Type
 	static const int NUM_VIEW = 4;
-	enum ViewType { VIEW_AXIAL, VIEW_CORONAL, VIEW_SAGITTAL, VIEW_3D };
+	enum ViewType {VIEW_AXIAL, VIEW_CORONAL, VIEW_SAGITTAL, VIEW_3D  };
 
 protected:
 	/// Vtk Render Windows

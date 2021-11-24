@@ -63,6 +63,9 @@ void DVManager::InitVtkWindow( int viewType, void* hWnd )
 
 		// 3D View 설정
 		if( viewType == VIEW_3D ) {
+
+			
+
 			// Trackball Camera 인터랙션 스타일 적용
 			interactor->SetInteractorStyle( vtkSP<vtkInteractorStyleTrackballCamera>::New() );
 
@@ -81,6 +84,8 @@ void DVManager::InitVtkWindow( int viewType, void* hWnd )
 			camera->SetPosition( 0.0, 0.0, -1.0 );		// 카메라 위치
 			camera->SetViewUp( 0.0, -1.0, 0.0 );			// 카메라 Up 벡터
 		}
+
+
 		
 		// RenderWindow 생성 후 Dialog 핸들, Interactor, Renderer 설정
 		m_vtkWindow[viewType] = vtkSP<vtkRenderWindow>::New();
@@ -331,7 +336,9 @@ void DVManager::RotateVolume()
 	vtkSP<VolumeData> volumeData = GetDicomLoader()->GetVolumeData();
 	if (volumeData == NULL) return;
 
+	auto m_origin=volumeData->GetOrientation();
 	
+
 
 	
 

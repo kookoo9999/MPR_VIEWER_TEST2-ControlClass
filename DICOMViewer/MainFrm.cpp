@@ -112,7 +112,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// DICOM Group View 생성
 	if( !m_DicomGroupView.Create( 
-		_T( "DICOM Group" ),		// 도킹 창 이름
+		_T( "Patient List" ),		// 도킹 창 이름
 		this,							// 부모 윈도우 = 메인 프레임
 		CRect( 0, 0, 200, 200 ),		// 초기 윈도우 크기
 		TRUE,							// 제목 창 표시 여부
@@ -300,7 +300,7 @@ void CMainFrame::OnComboVolumeRenderMode()
 	CMFCRibbonComboBox *volumeModeComboBox = 
 		DYNAMIC_DOWNCAST(CMFCRibbonComboBox, 
 		m_wndRibbonBar.FindByID(ID_COMBO_VOLUME_RENDER_MODE));
-
+	
 	// 콤보박스에서 선택된 인덱스
 	int selectedIdx = volumeModeComboBox->GetCurSel();
 
