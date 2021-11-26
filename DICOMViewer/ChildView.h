@@ -21,13 +21,16 @@
 
 class CChildView : public CWnd
 {
+
+private:
+	CPoint mPos;
 // 생성입니다.
 public:
 	CChildView();
 
 // 특성입니다.
 public:
-	CDlgVtkView		m_dlgVtkView[4];
+	CDlgVtkView	m_dlgVtkView[4];
 
 // 작업입니다.
 public:
@@ -50,4 +53,5 @@ public:
 	afx_msg int OnCreate( LPCREATESTRUCT lpCreateStruct );
 	afx_msg void OnSize( UINT nType, int cx, int cy );
 	afx_msg BOOL OnEraseBkgnd( CDC* pDC );
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 };

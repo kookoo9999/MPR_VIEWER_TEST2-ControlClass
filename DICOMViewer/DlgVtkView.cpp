@@ -110,8 +110,6 @@ void CDlgVtkView::OnHScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar )
 		// 스크롤 바 위치 설정
 		pScrollBar->SetScrollPos( scrollPos );
 		
-		
-
 		// 슬라이스 이미지 스크롤
 		DVManager::Mgr()->ScrollSliceIndex( m_ViewType, scrollPos );
 

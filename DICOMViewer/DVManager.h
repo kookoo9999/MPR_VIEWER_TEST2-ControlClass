@@ -194,6 +194,9 @@ public:
 	void ShowPlnaeTest();
 
 	void ShowPlnateTest2();
+
+	//get mouse pos
+	void Mouse();
 	// 영상 데이터 저장 변수
 	vtkSP<vtkImageData> m_pDICOMImage;
 

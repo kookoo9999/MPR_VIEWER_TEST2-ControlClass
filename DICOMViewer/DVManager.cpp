@@ -560,6 +560,14 @@ void DVManager::ShowPlnateTest2()
 
 }
 
+void DVManager::Mouse()
+{
+	CPoint cp;
+	::GetCursorPos(&cp);
+	
+	
+}
+
 	
 
 

@@ -57,6 +57,8 @@ ON_UPDATE_COMMAND_UI(ID_SLIDER_SKIN, &CMainFrame::OnUpdateSliderSkin)
 ON_COMMAND(ID_SLIDERRX, &CMainFrame::OnSliderrx)
 ON_COMMAND(ID_SLIDERRY, &CMainFrame::OnSliderry)
 ON_COMMAND(ID_SLIDERRZ, &CMainFrame::OnSliderrz)
+//ON_COMMAND(ID_CHECK_Thread, &CMainFrame::OnCheckThread)
+ON_COMMAND(ID_CHECK_Thread, &CMainFrame::OnCheckThread)
 END_MESSAGE_MAP()
 
 // CMainFrame 생성/소멸
@@ -71,8 +73,37 @@ CMainFrame::~CMainFrame()
 {
 }
 
+UINT CMainFrame::Thread_MouseTracking(LPVOID _mothod)
+{
+	CMainFrame* pDlg = (CMainFrame*)_mothod;	
+	
+	HWND view = ::GetDlgItem(AfxGetMainWnd()->m_hWnd, IDD_VTK_VIEW);
+	HWND hWnd = AfxGetMainWnd()->m_hWnd;
+
+	CString str;
+	CPoint m_pos;
+	
+	
+	pDlg->m_bThreadWorking = !pDlg->m_bThreadWorking;
+	while (pDlg->m_bThreadWorking)
+	{
+		
+		Sleep(1);		
+		::GetCursorPos(&m_pos);
+		::ScreenToClient(hWnd, &m_pos);
+		
+		str.Format(_T("x = %d , y = %d\n"), m_pos.x, m_pos.y);		
+		TRACE(str);
+		
+
+	}
+
+	return 0;
+}
+
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
+	
 	if (CFrameWndEx::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
@@ -128,6 +159,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_DicomGroupView.EnableDocking( CBRS_ALIGN_ANY );
 	// DICOM Group 창 도킹
 	DockPane( &m_DicomGroupView );
+
+	
 
 	return 0;
 }
@@ -608,4 +641,21 @@ void CMainFrame::OnSliderrz()
 	DVManager::Mgr()->m_pControlManager->RotateUpdate();
 	DVManager::Mgr()->m_pControlManager->Update();
 	DVManager::Mgr()->GetVtkWindow(3)->Render();
+}
+
+
+
+
+void CMainFrame::OnCheckThread()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_pThread = NULL;
+	m_pThread = ::AfxBeginThread(Thread_MouseTracking, this);
+
+	if (m_pThread == NULL)
+	{
+		AfxMessageBox(_T("Error"));
+	}
+	//CloseHandle(m_pThread);
+
 }

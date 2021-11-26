@@ -50,17 +50,20 @@
 #define ID_CHECK_SKIN                   32783
 #define ID_SLIDER_BONE                  32784
 #define ID_EDIT2                        32786
+#define ID_EDIT_mPos                    32786
 #define ID_SLIDER2                      32787
 #define ID_SLIDERRX                     32788
 #define ID_SLIDERRY                     32789
 #define ID_SLIDERRZ                     32790
+#define ID_CHECK2                       32792
+#define ID_CHECK_Thread                 32792
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        311
-#define _APS_NEXT_COMMAND_VALUE         32791
+#define _APS_NEXT_COMMAND_VALUE         32793
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
