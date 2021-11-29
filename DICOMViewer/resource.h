@@ -55,8 +55,6 @@
 #define ID_SLIDERRX                     32788
 #define ID_SLIDERRY                     32789
 #define ID_SLIDERRZ                     32790
-#define ID_CHECK2                       32792
-#define ID_CHECK_Thread                 32792
 
 // Next default values for new objects
 // 

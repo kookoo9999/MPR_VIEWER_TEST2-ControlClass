@@ -22,6 +22,8 @@
 #define new DEBUG_NEW
 #endif
 
+#define WM_USER_MOUSEPOS WM_USER + 101
+
 // CMainFrame
 
 IMPLEMENT_DYNAMIC(CMainFrame, CFrameWndEx)
@@ -58,7 +60,8 @@ ON_COMMAND(ID_SLIDERRX, &CMainFrame::OnSliderrx)
 ON_COMMAND(ID_SLIDERRY, &CMainFrame::OnSliderry)
 ON_COMMAND(ID_SLIDERRZ, &CMainFrame::OnSliderrz)
 //ON_COMMAND(ID_CHECK_Thread, &CMainFrame::OnCheckThread)
-ON_COMMAND(ID_CHECK_Thread, &CMainFrame::OnCheckThread)
+
+ON_MESSAGE(WM_USER_MOUSEPOS, &CMainFrame::OnUserMousepos)
 END_MESSAGE_MAP()
 
 // CMainFrame 생성/소멸
@@ -71,6 +74,14 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
+	/*DWORD dwResult;
+	::GetExitCodeThread(m_pThread->m_hThread, &dwResult);
+
+	m_pThread = NULL;
+	m_bThreadWorking = stop;*/
+	//AfxGetApp()->m_pMainWnd->PostMessage(WM_CLOSE);
+	//AfxMessageBox(_T("exit"));
+	//GetParent()->SendMessage(WM_CLOSE);
 }
 
 UINT CMainFrame::Thread_MouseTracking(LPVOID _mothod)
@@ -80,26 +91,41 @@ UINT CMainFrame::Thread_MouseTracking(LPVOID _mothod)
 	HWND view = ::GetDlgItem(AfxGetMainWnd()->m_hWnd, IDD_VTK_VIEW);
 	HWND hWnd = AfxGetMainWnd()->m_hWnd;
 
-	CString str;
+	//CMFCRibbonEdit* pEdit = new CMFCRibbonEdit(ID_EDIT_mPos, 72, _T("X: Y: Z:"), 13);
+	/*CMFCRibbonSlider* edit = DYNAMIC_DOWNCAST(CMFCRibbonEdit,
+		m_wndRibbonBar.FindByID(ID_EDIT_mPos));*/
+	//ST_Thread st = *(ST_Thread*)_mothod;
+
+//	CMFCRibbonEdit* edit = st.m_rEd;		
+	//CString str;
 	CPoint m_pos;
-	
-	
-	pDlg->m_bThreadWorking = !pDlg->m_bThreadWorking;
+	//pDlg->m_bThreadWorking = !pDlg->m_bThreadWorking;
 	while (pDlg->m_bThreadWorking)
 	{
-		
 		Sleep(1);		
 		::GetCursorPos(&m_pos);
-		::ScreenToClient(hWnd, &m_pos);
-		
-		str.Format(_T("x = %d , y = %d\n"), m_pos.x, m_pos.y);		
-		TRACE(str);
-		
+		::ScreenToClient(hWnd, &m_pos);			
+		pDlg->PostMessage(WM_USER_MOUSEPOS, (WPARAM)m_pos.x, (WPARAM)m_pos.y);
 
 	}
 
+	
+
 	return 0;
 }
+
+//LRESULT CMainFrame::OnSetMousePos(WPARAM wParam, LPARAM lParam)
+//{
+//	CString strMousePos;
+//	CMFCRibbonEdit* edit = DYNAMIC_DOWNCAST(CMFCRibbonEdit, m_wndRibbonBar.FindByID(ID_EDIT_mPos));
+//
+//	strMousePos.Format(_T("X : %d, Y : %d"), (int)wParam, (int)lParam);	
+//	edit->SetEditText(strMousePos);
+//
+//	return 0;
+//}
+
+
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
@@ -160,6 +186,16 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// DICOM Group 창 도킹
 	DockPane( &m_DicomGroupView );
 
+	m_pThread = NULL;
+	//m_pThread = ::AfxBeginThread(Thread_MouseTracking,&arg1,THREAD_PRIORITY_NORMAL,0,0);
+	m_pThread = ::AfxBeginThread(Thread_MouseTracking, this);
+
+
+	if (m_pThread == NULL)
+	{
+		AfxMessageBox(_T("Error"));
+		return FALSE;
+	}
 	
 
 	return 0;
@@ -313,15 +349,16 @@ void CMainFrame::OnOpenDicomFolder()
 {
 	CFolderPickerDialog folderDlg( _T( "" ), 0, NULL, 0 );
 
+
 	if( IDOK == folderDlg.DoModal() ) {
-		/// DICOM 파일이 포함된 폴더 경로
+		// DICOM 파일이 포함된 폴더 경로
 		CString path = folderDlg.GetPathName();
 
-		/// 폴더내의 DICOM(*.dcm)파일 읽기
+		// 폴더내의 DICOM(*.dcm)파일 읽기
 		DVManager::Mgr()->GetDicomLoader()
 			->OpenDicomDirectory( CT2CA( LPCWSTR( path ) ) );
 
-		/// DICOM 그룹 트리 업데이트
+		// DICOM 그룹 트리 업데이트
 		m_DicomGroupView.UpdateDicomTree();
 	}
 }
@@ -643,19 +680,42 @@ void CMainFrame::OnSliderrz()
 	DVManager::Mgr()->GetVtkWindow(3)->Render();
 }
 
+//void CMainFrame::OnCheckThread()
+//{
+//	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+//	
+//	/*m_rEdit = DYNAMIC_DOWNCAST(CMFCRibbonEdit, m_wndRibbonBar.FindByID(ID_EDIT_mPos));
+//	
+//	m_rEdit->SetEditText(_T("test"));
+//
+//	ST_Thread st;*/
+//
+//	/*CMFCRibbonEdit* m_rEdit1 = new CMFCRibbonEdit(ID_EDIT_mPos, 72, _T("test!"), 13);
+//	m_rEdit->SetEditText(_T("hi"));*/
+//	m_pThread = NULL;
+//	//m_pThread = ::AfxBeginThread(Thread_MouseTracking,&arg1,THREAD_PRIORITY_NORMAL,0,0);
+//	m_pThread = ::AfxBeginThread(Thread_MouseTracking,this);
+//		
+//
+//	if (m_pThread == NULL)
+//	{
+//		AfxMessageBox(_T("Error"));
+//	}
+//	//CloseHandle(m_pThread);
+//
+//}
 
 
-
-void CMainFrame::OnCheckThread()
+afx_msg LRESULT CMainFrame::OnUserMousepos(WPARAM wParam, LPARAM lParam)
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	m_pThread = NULL;
-	m_pThread = ::AfxBeginThread(Thread_MouseTracking, this);
 
-	if (m_pThread == NULL)
-	{
-		AfxMessageBox(_T("Error"));
-	}
-	//CloseHandle(m_pThread);
+	CString strMousePos;
+	CMFCRibbonEdit* edit = DYNAMIC_DOWNCAST(CMFCRibbonEdit, m_wndRibbonBar.FindByID(ID_EDIT_mPos));
+	
+	strMousePos.Format(_T("X : %d , Y : %d , depth : %d"), (int)wParam, (int)lParam ,(int)NULL);
+	edit->SetEditText(strMousePos);
 
+	
+
+	return 0;
 }

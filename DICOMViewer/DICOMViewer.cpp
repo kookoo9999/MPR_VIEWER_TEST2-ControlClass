@@ -119,13 +119,14 @@ BOOL CDICOMViewerApp::InitInstance()
 		WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, NULL,
 		NULL);
 
-
-
-
-
 	// 창 하나만 초기화되었으므로 이를 표시하고 업데이트합니다.
 	pFrame->ShowWindow(SW_SHOW);
 	pFrame->UpdateWindow();
+
+	
+
+	
+	
 	return TRUE;
 }
 
@@ -160,6 +161,8 @@ public:
 	afx_msg void OnViewSca();
 	afx_msg void OnUpdateViewSca(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateView3dOnOff(CCmdUI *pCmdUI);
+protected:
+//	afx_msg LRESULT OnUserMousepos(WPARAM wParam, LPARAM lParam);
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(CAboutDlg::IDD)
@@ -175,6 +178,7 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 	//ON_COMMAND(ID_VIEW_SCA, &CAboutDlg::OnViewSca)
 	//ON_UPDATE_COMMAND_UI(ID_VIEW_SCA, &CAboutDlg::OnUpdateViewSca)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_3D_ON_OFF, &CAboutDlg::OnUpdateView3dOnOff)
+//	ON_MESSAGE(WM_USER_MOUSEPOS, &CAboutDlg::OnUserMousepos)
 END_MESSAGE_MAP()
 
 // 대화 상자를 실행하기 위한 응용 프로그램 명령입니다.
@@ -227,3 +231,9 @@ void CAboutDlg::OnUpdateView3dOnOff(CCmdUI *pCmdUI)
 {
 	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
 }
+
+
+//afx_msg LRESULT CAboutDlg::OnUserMousepos(WPARAM wParam, LPARAM lParam)
+//{
+//	return 0;
+//}

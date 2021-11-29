@@ -50,23 +50,22 @@ protected:  // 컨트롤 모음이 포함된 멤버입니다.
 	CMFCRibbonStatusBar  m_wndStatusBar;
 	CChildView    m_wndView;
 	CDicomGroupView m_DicomGroupView;
+	
+	
 
 public:
 	/// 기본 View 윈도우
 	CChildView* GetWndView() { return &m_wndView; }
-
-	
-
-	
+		
 	enum State{stop=0,working};
-	bool m_bThreadWorking = stop;
+	bool m_bThreadWorking = working;
 	CWinThread *m_pThread = NULL;
 	
 
 	//2. 스레드 동작시킬 함수를 생성
 
 	static UINT Thread_MouseTracking(LPVOID _mothod);
-
+	
 	
 
 // 생성된 메시지 맵 함수
@@ -108,7 +107,11 @@ public:
 	
 
 	/*afx_msg void OnCheckThread();*/
-	afx_msg void OnCheckThread();
+	//afx_msg void OnCheckThread();
+protected:
+
+	//Write Corrdinate at CMFCRibbonEdit*
+	afx_msg LRESULT OnUserMousepos(WPARAM wParam, LPARAM lParam);
 };
 
 
