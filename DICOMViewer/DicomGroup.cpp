@@ -48,7 +48,7 @@ void DicomGroup::LoadDicomInfo()
 	gdcm::Tag tagPatientWeight( 0x0010, 0x1030 );
 	gdcm::Tag tagStudyDescription( 0x0008, 0x1030 );
 	gdcm::Tag tagSeriesDescription( 0x0008, 0x103e );
-
+	
 	if( ds.FindDataElement( tagPatientName ) ) 
 		PatientName = sf.ToString( tagPatientName );
 	if( ds.FindDataElement( tagPatientBirthDate ) ) 

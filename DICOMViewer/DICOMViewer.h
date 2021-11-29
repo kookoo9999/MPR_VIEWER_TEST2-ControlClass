@@ -46,9 +46,9 @@ public:
 	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()
 
-	enum State { stop = 0, working };
+	/*enum State { stop = 0, working };
 	bool m_bThreadWorking = stop;
-	CWinThread *m_pThread = NULL;
+	CWinThread *m_pThread = NULL;*/
 
 
 	//2. 스레드 동작시킬 함수를 생성

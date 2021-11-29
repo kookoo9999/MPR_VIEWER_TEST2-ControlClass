@@ -123,8 +123,19 @@ BOOL CDICOMViewerApp::InitInstance()
 	pFrame->ShowWindow(SW_SHOW);
 	pFrame->UpdateWindow();
 
-	
+	//pFrame->TestFunc();
 
+	//pFrame->m_pThread = NULL;
+	////m_pThread = ::AfxBeginThread(Thread_MouseTracking,&arg1,THREAD_PRIORITY_NORMAL,0,0);
+	//pFrame->m_pThread = ::AfxBeginThread(pFrame->Thread_MouseTracking, this);
+
+
+	//if (pFrame->m_pThread == NULL)
+	//{
+	//	AfxMessageBox(_T("Error"));
+	//	return FALSE;
+	//}
+	
 	
 	
 	return TRUE;

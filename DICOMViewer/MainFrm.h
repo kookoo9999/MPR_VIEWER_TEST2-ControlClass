@@ -54,16 +54,18 @@ protected:  // 컨트롤 모음이 포함된 멤버입니다.
 	
 
 public:
-	/// 기본 View 윈도우
+	// 기본 View 윈도우
 	CChildView* GetWndView() { return &m_wndView; }
-		
+	
+private:
 	enum State{stop=0,working};
 	bool m_bThreadWorking = working;
 	CWinThread *m_pThread = NULL;
 	
-
+	void TestFunc();
 	//2. 스레드 동작시킬 함수를 생성
-
+public:
+	bool setThreadWorking();
 	static UINT Thread_MouseTracking(LPVOID _mothod);
 	
 	
@@ -112,6 +114,8 @@ protected:
 
 	//Write Corrdinate at CMFCRibbonEdit*
 	afx_msg LRESULT OnUserMousepos(WPARAM wParam, LPARAM lParam);
+public:
+	afx_msg void OnDestroy();
 };
 
 

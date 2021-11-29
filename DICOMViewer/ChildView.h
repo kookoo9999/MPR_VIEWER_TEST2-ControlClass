@@ -23,7 +23,7 @@ class CChildView : public CWnd
 {
 
 private:
-	CPoint mPos;
+	
 // 생성입니다.
 public:
 	CChildView();
@@ -53,5 +53,5 @@ public:
 	afx_msg int OnCreate( LPCREATESTRUCT lpCreateStruct );
 	afx_msg void OnSize( UINT nType, int cx, int cy );
 	afx_msg BOOL OnEraseBkgnd( CDC* pDC );
-	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+//	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 };

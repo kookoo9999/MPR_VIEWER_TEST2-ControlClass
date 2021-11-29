@@ -62,6 +62,7 @@ ON_COMMAND(ID_SLIDERRZ, &CMainFrame::OnSliderrz)
 //ON_COMMAND(ID_CHECK_Thread, &CMainFrame::OnCheckThread)
 
 ON_MESSAGE(WM_USER_MOUSEPOS, &CMainFrame::OnUserMousepos)
+ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 // CMainFrame 생성/소멸
@@ -74,21 +75,25 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
-	/*DWORD dwResult;
-	::GetExitCodeThread(m_pThread->m_hThread, &dwResult);
+	
+}
 
-	m_pThread = NULL;
-	m_bThreadWorking = stop;*/
-	//AfxGetApp()->m_pMainWnd->PostMessage(WM_CLOSE);
-	//AfxMessageBox(_T("exit"));
-	//GetParent()->SendMessage(WM_CLOSE);
+void CMainFrame::TestFunc()
+{
+	AfxMessageBox(_T("Hello, this is test"));
+}
+
+bool CMainFrame::setThreadWorking()
+{
+	m_bThreadWorking = stop;
+	return true;
 }
 
 UINT CMainFrame::Thread_MouseTracking(LPVOID _mothod)
 {
 	CMainFrame* pDlg = (CMainFrame*)_mothod;	
 	
-	HWND view = ::GetDlgItem(AfxGetMainWnd()->m_hWnd, IDD_VTK_VIEW);
+	//HWND view = ::GetDlgItem(AfxGetMainWnd()->m_hWnd, IDD_VTK_VIEW);
 	HWND hWnd = AfxGetMainWnd()->m_hWnd;
 
 	//CMFCRibbonEdit* pEdit = new CMFCRibbonEdit(ID_EDIT_mPos, 72, _T("X: Y: Z:"), 13);
@@ -100,15 +105,17 @@ UINT CMainFrame::Thread_MouseTracking(LPVOID _mothod)
 	//CString str;
 	CPoint m_pos;
 	//pDlg->m_bThreadWorking = !pDlg->m_bThreadWorking;
+
+
 	while (pDlg->m_bThreadWorking)
 	{
-		Sleep(1);		
-		::GetCursorPos(&m_pos);
+		Sleep(10);		
+		::GetCursorPos(&m_pos);		
 		::ScreenToClient(hWnd, &m_pos);			
 		pDlg->PostMessage(WM_USER_MOUSEPOS, (WPARAM)m_pos.x, (WPARAM)m_pos.y);
 
 	}
-
+	
 	
 
 	return 0;
@@ -186,10 +193,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// DICOM Group 창 도킹
 	DockPane( &m_DicomGroupView );
 
-	m_pThread = NULL;
-	//m_pThread = ::AfxBeginThread(Thread_MouseTracking,&arg1,THREAD_PRIORITY_NORMAL,0,0);
+	m_pThread = NULL;	
 	m_pThread = ::AfxBeginThread(Thread_MouseTracking, this);
-
 
 	if (m_pThread == NULL)
 	{
@@ -368,8 +373,7 @@ void CMainFrame::OnComboVolumeRenderMode()
 {
 	// 리본 메뉴의 콤보 박스 컨트롤 가져오기
 	CMFCRibbonComboBox *volumeModeComboBox = 
-		DYNAMIC_DOWNCAST(CMFCRibbonComboBox, 
-		m_wndRibbonBar.FindByID(ID_COMBO_VOLUME_RENDER_MODE));
+		DYNAMIC_DOWNCAST(CMFCRibbonComboBox, m_wndRibbonBar.FindByID(ID_COMBO_VOLUME_RENDER_MODE));
 	
 	// 콤보박스에서 선택된 인덱스
 	int selectedIdx = volumeModeComboBox->GetCurSel();
@@ -702,7 +706,7 @@ void CMainFrame::OnSliderrz()
 //		AfxMessageBox(_T("Error"));
 //	}
 //	//CloseHandle(m_pThread);
-//
+//      
 //}
 
 
@@ -711,6 +715,50 @@ afx_msg LRESULT CMainFrame::OnUserMousepos(WPARAM wParam, LPARAM lParam)
 
 	CString strMousePos;
 	CMFCRibbonEdit* edit = DYNAMIC_DOWNCAST(CMFCRibbonEdit, m_wndRibbonBar.FindByID(ID_EDIT_mPos));
+
+	//// Client 크기
+	//CRect rect;
+	//GetClientRect(rect);
+
+	//// 메인 View에 포함된 Dialog 배치 (4분할)
+
+	//LONG xPos[3];
+	//xPos[0] = rect.left;
+	//xPos[1] = rect.left + rect.Width() / 2;
+	//xPos[2] = rect.right;
+
+	//LONG yPos[4];
+	//yPos[0] = rect.top;
+	//yPos[1] = rect.top + rect.Height() / 3;
+	//yPos[2] = rect.top + 2 * (rect.Height() / 3);
+	//yPos[3] = rect.bottom;
+
+	//CRect subRect[4];
+	//subRect[0] = CRect(xPos[0], yPos[0], xPos[1], yPos[1]); // Axial 위치
+	//subRect[1] = CRect(xPos[0], yPos[1], xPos[1], yPos[2]); // Coronal 위치
+	//subRect[2] = CRect(xPos[0], yPos[2], xPos[1], yPos[3]); // Sagittal 위치
+	//subRect[3] = CRect(xPos[1], yPos[0], xPos[2], yPos[3]); // 3D View 위치
+
+	//if ((wParam > xPos[0] && xPos[1] > wParam) && (lParam > yPos[0] && lParam < yPos[1])) 
+	//{
+	//	strMousePos.Format(_T("Axial X : %d , Y : %d , depth : %d"), (int)wParam, (int)lParam, (int)NULL);
+	//	edit->SetEditText(strMousePos);
+	//}
+	//else if ((wParam > xPos[0] && xPos[1] > wParam) && (lParam > yPos[1] && lParam < yPos[2]))
+	//{
+	//	strMousePos.Format(_T("Coronal X : %d , Y : %d , depth : %d"), (int)wParam, (int)lParam, (int)NULL);
+	//	edit->SetEditText(strMousePos);
+	//}
+	//else if ((wParam > xPos[0] && xPos[1] > wParam) && (lParam > yPos[2] && lParam < yPos[3]))
+	//{
+	//	strMousePos.Format(_T("Sagittal X : %d , Y : %d , depth : %d"), (int)wParam, (int)lParam, (int)NULL);
+	//	edit->SetEditText(strMousePos);
+	//}
+	//else if ((wParam > xPos[1] && xPos[2] > wParam) && (lParam > yPos[0] && yPos[3]>lParam))
+	//{
+	//	strMousePos.Format(_T("3D View X : %d , Y : %d , depth : %d"), (int)wParam, (int)lParam, (int)NULL);
+	//	edit->SetEditText(strMousePos);
+	//}
 	
 	strMousePos.Format(_T("X : %d , Y : %d , depth : %d"), (int)wParam, (int)lParam ,(int)NULL);
 	edit->SetEditText(strMousePos);
@@ -718,4 +766,19 @@ afx_msg LRESULT CMainFrame::OnUserMousepos(WPARAM wParam, LPARAM lParam)
 	
 
 	return 0;
+}
+
+
+void CMainFrame::OnDestroy()
+{
+	CFrameWndEx::OnDestroy();
+	
+	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
+	if (m_pThread != NULL)
+	{
+		WaitForSingleObject(m_pThread->m_hThread, 100);		
+		m_bThreadWorking = stop;
+		m_pThread = NULL;
+		
+	}
 }
